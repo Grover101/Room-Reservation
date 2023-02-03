@@ -7,6 +7,7 @@ const router = express.Router()
 router.use('/user', require('./users'))
 
 // * Room
+router.use('/room', require('./rooms'))
 
 // * Reservation
 
