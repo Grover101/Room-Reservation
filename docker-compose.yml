@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        restart: always
+        ports:
+            - ${PMS_LOCAL}:${PMS_DOCKER}
+        environment:
+            - PMA_HOST=mysqldb
+        depends_on:
+            - mysqldb
+
+    mysqldb:
+        image: mysql:8.0
+        cap_add:
+            - SYS_NICE
+        restart: always
+        environment:
+            - MYSQL_DATABASE=${MYSQL_DB_NAME}
+            - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+        ports:
+            - ${MYSQL_PORT}:${MYSQL_DOCKER_PORT}
+        volumes:
+            - db:/var/lib/mysql
+            - ./mysqldb/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    app:
+        container_name: 'Room-Reservation'
+        depends_on:
+            - mysqldb
+        build:
+            context: .
+        ports:
+            - ${PORT}:${DOCKER_PORT}
+        links:
+            - mysqldb
+        restart: always
+        volumes:
+            - .:/home/app
+volumes:
+    db:
+        driver: local
