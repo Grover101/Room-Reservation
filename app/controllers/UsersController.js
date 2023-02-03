@@ -1,18 +1,15 @@
 'use strict'
 
 const bcrypt = require('bcrypt')
+const { Op } = require('sequelize')
 const { User } = require('../models/index')
 
 module.exports = {
     async index(req, res) {
         try {
-            let option = {
-                order: [['id', 'ASC']]
-            }
-            option = req.query.active
-                ? { where: { active: req.query.active === 'true' }, ...option }
-                : option
-            const user = await User.findAll(option)
+            const user = await User.findAll({
+                attributes: { exclude: ['password'] }
+            })
             res.status(200).json(user)
         } catch (error) {
             res.status(500).json({
@@ -71,48 +68,16 @@ module.exports = {
 
             const data = req.body
 
-            if (data.email) {
-                const userEmail = await User.findOne({
-                    where: {
-                        email: data.email
-                    }
-                })
-
-                if (userEmail) {
-                    if (user.dataValues.email !== userEmail.email) {
-                        return res.status(409).json({
-                            message: 'Email already exists'
-                        })
-                    }
-                }
-            }
-
-            if (data.username) {
-                const userUsername = await User.findOne({
-                    where: {
-                        username: data.username
-                    }
-                })
-
-                if (userUsername) {
-                    if (user.dataValues.username !== userUsername.username) {
-                        return res.status(409).json({
-                            message: 'Username already exists'
-                        })
-                    }
-                }
-            }
-
             if (data.password) {
                 data.password = await bcrypt.hash(data.password, 10)
                 await user.update(data)
                 return res.status(200).json({
                     message: 'User updated'
                 })
-            } else {
-                delete data.password
-                await user.update(data)
             }
+
+            delete data.password
+            await user.update(data)
             return res.status(200).json({
                 message: 'User updated'
             })
@@ -128,26 +93,22 @@ module.exports = {
         try {
             const user = await User.findOne({
                 where: {
-                    id: req.params.id
+                    [Op.and]: [{ id: req.params.id }, { id: { [Op.ne]: 1 } }]
                 }
             })
-            if (user !== null) {
-                if (user.id === 1)
-                    return res.status(409).json({
-                        message: 'You can not delete the admin user'
-                    })
-                await user.destroy({
-                    where: {
-                        id: req.params.id
-                    }
-                })
-                return res.status(200).json({
-                    message: 'User deleted'
-                })
-            } else
+            if (!user)
                 return res.status(404).json({
                     message: 'No record found'
                 })
+
+            await user.destroy({
+                where: {
+                    id: req.params.id
+                }
+            })
+            return res.status(200).json({
+                message: 'User deleted'
+            })
         } catch (error) {
             res.status(500).json({
                 message: 'Error in the request'

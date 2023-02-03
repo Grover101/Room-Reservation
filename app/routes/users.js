@@ -17,7 +17,7 @@ router.get(
     [
         validateToken,
         roleAccess('admin'),
-        param('id', 'Invalid id').notEmpty().isNumeric(),
+        param('id', 'Invalid id is Number').notEmpty().isNumeric(),
         validateFields
     ],
     UsersController.show
@@ -47,7 +47,14 @@ router.put(
     [
         validateToken,
         roleAccess('admin'),
-        param('id', 'Invalid id').notEmpty().isNumeric(),
+        param('id', 'Invalid id is Number').notEmpty().isNumeric(),
+        check('email', 'Email is invalid').isEmail(),
+        check('email').custom(email =>
+            attributeExists(email, 'email', 'Users')
+        ),
+        check('password', 'Password is required')
+            .optional()
+            .isLength({ min: 6 }),
         validateFields
     ],
     UsersController.update
@@ -57,7 +64,7 @@ router.delete(
     [
         validateToken,
         roleAccess('admin'),
-        param('id', 'Invalid id').notEmpty().isNumeric(),
+        param('id', 'Invalid id is Number').notEmpty().isNumeric(),
         validateFields
     ],
     UsersController.delete
