@@ -8,6 +8,7 @@ const { validateFields } = require('../middlewares/validateFields')
 
 // * CONTROLLERS
 const RoomsController = require('../controllers/RoomsController')
+const { attributeExists } = require('../helpers/db-validates')
 
 router.get('/', [validateToken], RoomsController.index)
 router.get(
@@ -30,6 +31,9 @@ router.post(
         check('price', 'Price is required').not().isEmpty(),
         check('state', 'State is required').not().isEmpty(),
         check('typeRoom', 'Type Rom is required').not().isEmpty(),
+        check('number').custom(number =>
+            attributeExists(number, 'number', 'Rooms')
+        ),
         check('floor', 'Floor is Integer').isInt(),
         check('price', 'Price is Decimal').isDecimal(),
         check('state', 'State invalid').isIn([
