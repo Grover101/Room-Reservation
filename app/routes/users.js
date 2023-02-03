@@ -32,8 +32,11 @@ router.post(
         check('lastName', 'Name is required').not().isEmpty(),
         check('phone', 'Phone is required').not().isEmpty(),
         check('address', 'Address is required').not().isEmpty(),
+        check('gender', 'Gender is required').not().isEmpty(),
+        check('gender', 'Gender invalid').isIn(['Male', 'Female', 'Other']),
         check('email', 'Email is required').trim().escape().not().isEmpty(),
         check('email', 'Email is invalid').isEmail(),
+        check('ci').custom(ci => attributeExists(ci, 'ci', 'Users')),
         check('email').custom(email =>
             attributeExists(email, 'email', 'Users')
         ),
@@ -48,7 +51,11 @@ router.put(
         validateToken,
         roleAccess('admin'),
         param('id', 'Invalid id is Number').notEmpty().isNumeric(),
+        check('gender', 'Gender invalid')
+            .optional()
+            .isIn(['Male', 'Female', 'Other']),
         check('email', 'Email is invalid').isEmail(),
+        check('ci').custom(ci => attributeExists(ci, 'ci', 'Users')),
         check('email').custom(email =>
             attributeExists(email, 'email', 'Users')
         ),

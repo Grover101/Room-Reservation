@@ -13,7 +13,8 @@ module.exports = {
                 defaultValue: true
             },
             ci: {
-                type: Sequelize.STRING(15)
+                type: Sequelize.STRING(15),
+                unique: true
             },
             name: {
                 type: Sequelize.STRING(20)
@@ -31,6 +32,10 @@ module.exports = {
             email: {
                 type: Sequelize.STRING(40),
                 unique: true
+            },
+            gender: {
+                type: Sequelize.ENUM('Male', 'Female', 'Other'),
+                defaultValue: 'Other'
             },
             password: {
                 type: Sequelize.STRING
