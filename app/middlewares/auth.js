@@ -61,4 +61,17 @@ const roleAccess = role => {
     }
 }
 
-module.exports = { validateToken, roleAccess }
+const rolePeticion = async (req, res, next) => {
+    try {
+        const roleUser = await User.findOne({
+            where: { id: req.userId }
+        })
+        req.role = roleUser.role
+        req.id = roleUser.id
+        return next()
+    } catch (error) {
+        res.status(500).json({ message: 'Error Server' })
+    }
+}
+
+module.exports = { validateToken, roleAccess, rolePeticion }
