@@ -11,5 +11,6 @@ router.use('/user', require('./users'))
 router.use('/room', require('./rooms'))
 
 // * Reservation
+router.use('/reservation', require('./reservation'))
 
 module.exports = router
