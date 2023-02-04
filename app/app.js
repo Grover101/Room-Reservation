@@ -28,7 +28,7 @@ app.get('/api/v1', (_req, res) => {
 })
 
 sequelize
-    .sync()
+    .authenticate()
     .then(() => {
         console.log('DB Connection Local')
     })
