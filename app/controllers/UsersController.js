@@ -59,14 +59,37 @@ module.exports = {
                     id: req.params.id
                 }
             })
+            const data = req.body
 
-            if (!user) {
-                return res.status(400).json({
-                    message: 'No record found'
+            if (data.email) {
+                const userEmail = await User.findOne({
+                    where: {
+                        email: data.email
+                    }
                 })
+                if (userEmail) {
+                    if (user.email !== userEmail.email) {
+                        return res.status(409).json({
+                            message: 'Email already exists'
+                        })
+                    }
+                }
             }
 
-            const data = req.body
+            if (data.ci) {
+                const userCI = await User.findOne({
+                    where: {
+                        ci: data.ci
+                    }
+                })
+                if (userCI) {
+                    if (user.ci !== userCI.ci) {
+                        return res.status(409).json({
+                            message: 'CI already exists'
+                        })
+                    }
+                }
+            }
 
             if (data.password) {
                 data.password = await bcrypt.hash(data.password, 10)
@@ -76,7 +99,6 @@ module.exports = {
                 })
             }
 
-            delete data.password
             await user.update(data)
             return res.status(200).json({
                 message: 'User updated'
