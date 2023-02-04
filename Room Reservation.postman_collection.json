@@ -523,7 +523,7 @@
 					"response": []
 				},
 				{
-					"name": "/user/:id",
+					"name": "/room/:id",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -572,12 +572,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}/user/3",
+							"raw": "{{URL}}/room/3",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
-								"user",
+								"room",
 								"3"
 							]
 						}
@@ -875,7 +875,7 @@
 								{
 									"key": "archivo",
 									"type": "file",
-									"src": "/home/grover/Imagenes/image.jpg"
+									"src": "/home/grover/Imagenes/profile.jpg"
 								}
 							]
 						},
