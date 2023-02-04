@@ -3,10 +3,13 @@
 const { Room } = require('../models/index')
 
 module.exports = {
-    async index(_req, res) {
+    async index(req, res) {
         try {
+            const { state } = req.query
+            const option = {}
+            if (state) option.where = { state }
             const room = await Room.findAll({
-                where: { state: 'Available' },
+                ...option,
                 attributes: { exclude: ['createdAt', 'updatedAt'] }
             })
             return res.status(200).json(room)
@@ -66,6 +69,22 @@ module.exports = {
             }
 
             const data = req.body
+
+            if (data.number) {
+                const roomNumber = await Room.findOne({
+                    where: {
+                        number: data.number
+                    }
+                })
+                if (roomNumber) {
+                    if (room.number !== roomNumber.number) {
+                        return res.status(409).json({
+                            message: 'Number Room already exists'
+                        })
+                    }
+                }
+            }
+
             await room.update(data)
             return res.status(200).json({
                 message: 'Room updated'
