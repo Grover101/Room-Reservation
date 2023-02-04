@@ -8,7 +8,7 @@ const { validateFields } = require('../middlewares/validateFields')
 
 // * CONTROLLERS
 const UsersController = require('../controllers/UsersController')
-const { attributeExists } = require('../helpers/db-validates')
+const { attributeExists, Exists } = require('../helpers/db-validates')
 
 // * ROUTES
 router.get('/', [validateToken, roleAccess('admin')], UsersController.index)
@@ -18,6 +18,7 @@ router.get(
         validateToken,
         roleAccess('admin'),
         param('id', 'Invalid id is Number').notEmpty().isNumeric(),
+        param('id').custom(id => Exists(id, 'id', 'Users')),
         validateFields
     ],
     UsersController.show
@@ -51,14 +52,11 @@ router.put(
         validateToken,
         roleAccess('admin'),
         param('id', 'Invalid id is Number').notEmpty().isNumeric(),
+        param('id').custom(id => Exists(id, 'id', 'Users')),
         check('gender', 'Gender invalid')
             .optional()
             .isIn(['Male', 'Female', 'Other']),
         check('email', 'Email is invalid').isEmail(),
-        check('ci').custom(ci => attributeExists(ci, 'ci', 'Users')),
-        check('email').custom(email =>
-            attributeExists(email, 'email', 'Users')
-        ),
         check('password', 'Password is required')
             .optional()
             .isLength({ min: 6 }),
@@ -72,6 +70,7 @@ router.delete(
         validateToken,
         roleAccess('admin'),
         param('id', 'Invalid id is Number').notEmpty().isNumeric(),
+        param('id').custom(id => Exists(id, 'id', 'Users')),
         validateFields
     ],
     UsersController.delete

@@ -8,7 +8,7 @@ const { validateFields } = require('../middlewares/validateFields')
 
 // * CONTROLLERS
 const RoomsController = require('../controllers/RoomsController')
-const { attributeExists } = require('../helpers/db-validates')
+const { attributeExists, Exists } = require('../helpers/db-validates')
 
 router.get('/', [validateToken], RoomsController.index)
 router.get(
@@ -16,6 +16,7 @@ router.get(
     [
         validateToken,
         param('id', 'Invalid id is Number').notEmpty().isNumeric(),
+        param('id').custom(id => Exists(id, 'id', 'Rooms')),
         validateFields
     ],
     RoomsController.show
@@ -59,6 +60,7 @@ router.put(
         validateToken,
         roleAccess('admin'),
         param('id', 'Invalid id is Number').notEmpty().isNumeric(),
+        param('id').custom(id => Exists(id, 'id', 'Rooms')),
         check('floor', 'Floor is Integer').isInt(),
         check('price', 'Price is Decimal').isDecimal(),
         check('state', 'State invalid').isIn([
@@ -84,6 +86,7 @@ router.delete(
         validateToken,
         roleAccess('admin'),
         param('id', 'Invalid id is Number').notEmpty().isNumeric(),
+        param('id').custom(id => Exists(id, 'id', 'Rooms')),
         validateFields
     ],
     RoomsController.delete
