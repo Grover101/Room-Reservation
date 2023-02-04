@@ -15,8 +15,7 @@ module.exports = {
                     key: 'id'
                 },
                 onUpdate: 'SET NULL',
-                onDelete: 'SET NULL',
-                allowNull: false
+                onDelete: 'SET NULL'
             },
             idUser: {
                 type: Sequelize.INTEGER,
@@ -25,11 +24,10 @@ module.exports = {
                     key: 'id'
                 },
                 onUpdate: 'SET NULL',
-                onDelete: 'SET NULL',
-                allowNull: false
+                onDelete: 'SET NULL'
             },
             state: {
-                type: Sequelize.ENUM('Pending', 'Paid', 'Deleted'),
+                type: Sequelize.ENUM('Pending', 'Paid', 'Deleted', 'Finalized'),
                 defaultValue: 'Pending',
                 allowNull: false
             },
@@ -41,15 +39,13 @@ module.exports = {
                 allowNull: false
             },
             billingName: {
-                type: Sequelize.STRING,
-                allowNull: false
+                type: Sequelize.STRING(20)
             },
             nitCi: {
-                type: Sequelize.STRING,
-                allowNull: false
+                type: Sequelize.STRING(20)
             },
             amount: {
-                type: Sequelize.DECIMAL,
+                type: Sequelize.DECIMAL(5, 2),
                 allowNull: false
             },
             paymentMethod: {
@@ -62,10 +58,10 @@ module.exports = {
                 allowNull: false
             },
             cardNumber: {
-                type: Sequelize.INTEGER
+                type: Sequelize.STRING(15)
             },
             voucher: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING(50)
             },
             reservationDate: {
                 type: Sequelize.DATE

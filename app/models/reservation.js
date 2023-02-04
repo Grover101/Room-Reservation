@@ -16,19 +16,19 @@ module.exports = (sequelize, DataTypes) => {
         {
             idRoom: DataTypes.INTEGER,
             idUser: DataTypes.INTEGER,
-            state: DataTypes.ENUM('Pending', 'Paid', 'Deleted'),
+            state: DataTypes.ENUM('Pending', 'Paid', 'Deleted', 'Finalized'),
             detail: DataTypes.STRING,
             cantDay: DataTypes.INTEGER,
             billingName: DataTypes.STRING,
             nitCi: DataTypes.STRING,
-            amount: DataTypes.DECIMAL,
+            amount: DataTypes.DECIMAL(5, 2),
             paymentMethod: DataTypes.ENUM(
                 'Bank Transfer',
                 'Bank Deposit',
                 'Cash',
                 'Credit Card'
             ),
-            cardNumber: DataTypes.INTEGER,
+            cardNumber: DataTypes.STRING,
             voucher: DataTypes.STRING,
             reservationDate: DataTypes.DATE,
             entryDate: DataTypes.DATE,

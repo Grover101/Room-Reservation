@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
             number: DataTypes.INTEGER,
             floor: DataTypes.INTEGER,
             description: DataTypes.STRING,
-            price: DataTypes.DECIMAL,
+            price: DataTypes.DECIMAL(5, 2),
             state: DataTypes.ENUM('Available', 'Reserved', 'Mantenance'),
             typeRoom: DataTypes.ENUM(
                 'Individual',
