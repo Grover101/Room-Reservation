@@ -27,3 +27,15 @@ yarn-error.log
 docker-compose.yml
 Dockerfile
 .dockerignore
+
+# Config dev
+.env.example
+.eslintignore
+.eslintrc.json
+.prettierignore
+.prettierrc
+README.md
+Room Reservation.postman_collection.json
+
+mysqldb
+mysqldb1
