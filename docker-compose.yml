@@ -1,16 +1,6 @@
 version: '3.9'
 
 services:
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        restart: always
-        ports:
-            - ${PMS_LOCAL}:${PMS_DOCKER}
-        environment:
-            - PMA_HOST=mysqldb
-        depends_on:
-            - mysqldb
-
     mysqldb:
         image: mysql:8.0
         cap_add:
@@ -38,6 +28,7 @@ services:
         restart: always
         volumes:
             - .:/home/app
+        command: ["sh", "-c", "yarn db && yarn dev"]
 volumes:
     db:
         driver: local
